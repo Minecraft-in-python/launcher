@@ -57,6 +57,12 @@ class MinecraftLauncher(Tk):
         # notebook 之 settings
         self._widget['main.settings.version'] = ttk.Label(self._widget['main.settings'],
                 text=get_lang('launcher.main.settings.text')[0] % VERSION['str'])
+        self._widget['main.settings.language_label'] = ttk.Label(self._widget['main.settings'],
+                text=get_lang('launcher.main.settings.language'))
+        self._widget['main.settings.language'] = ttk.Combobox(self._widget['main.settings'],
+                text=get_lang('launcher.main.settings.language'))
+        self._widget['main.settings.language'].state(['readonly'])
+        self.set_language()
 
     def create_var(self):
         self._var['start.select_version'] = StringVar()
@@ -71,7 +77,13 @@ class MinecraftLauncher(Tk):
         self._widget['main.install.install'].grid(column=0, row=2, sticky='ws')
         self._widget['main.install.uninstall'].grid(column=1, row=2, sticky='ws')
         self._widget['main.settings.version'].grid(column=0, row=0, sticky='nw')
+        self._widget['main.settings.language_label'].grid(column=0, row=1, sticky='nw')
+        self._widget['main.settings.language'].grid(column=1, row=1, sticky='nw')
         self.resizable(False, False)
+
+    def set_language(self):
+        lang = tuple(api.get_lang_list())
+        self._widget['main.settings.language']['values'] = lang
 
     def set_versions(self, events=None):
         json = api.get_versions()

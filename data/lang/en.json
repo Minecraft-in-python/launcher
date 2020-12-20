@@ -12,5 +12,6 @@
 		"Launcher version %s",
 		"This peogram released under GPLv3",
 		"Copyright (c) Minecraft-in-python 2020"
-	]
+	],
+	"launcher.main.settings.language": "Language:"
 }

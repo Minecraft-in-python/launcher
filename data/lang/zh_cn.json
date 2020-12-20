@@ -12,6 +12,6 @@
 		"启动器版本 %s",
 		"该程序在 GPLv3 协议下发行",
 		"Copyright (c) Minecraft-in-python 2020"
-	]
-
+	],
+	"launcher.main.settings.language": "语言"
 }
