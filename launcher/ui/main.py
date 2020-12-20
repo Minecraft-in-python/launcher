@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 
 from launcher import api
 from launcher.source import get_lang
+from launcher.ui.dialogue import InstallDialogue
 from launcher.utils import *
 
 
@@ -51,7 +52,7 @@ class MinecraftLauncher(Tk):
                 command=self._widget['main.install.version_list'].yview)
         self._widget['main.install.version_list'].configure(yscrollcommand=self._widget['main.install.scrollbar'].set)
         self._widget['main.install.install'] = ttk.Button(self._widget['main.install'],
-                text=get_lang('launcher.main.install.install'))
+                text=get_lang('launcher.main.install.install'), command=self.install_version)
         self._widget['main.install.uninstall'] = ttk.Button(self._widget['main.install'],
                 text=get_lang('launcher.main.install.uninstall'))
         # notebook 之 settings
@@ -60,7 +61,7 @@ class MinecraftLauncher(Tk):
         self._widget['main.settings.language_label'] = ttk.Label(self._widget['main.settings'],
                 text=get_lang('launcher.main.settings.language'))
         self._widget['main.settings.language'] = ttk.Combobox(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.language'))
+                text=get_lang('launcher.main.settings.language'), width=10)
         self._widget['main.settings.language'].state(['readonly'])
         self.set_language()
 
@@ -76,18 +77,29 @@ class MinecraftLauncher(Tk):
         self._widget['main.install.scrollbar'].grid(column=2, row=1, sticky='nes')
         self._widget['main.install.install'].grid(column=0, row=2, sticky='ws')
         self._widget['main.install.uninstall'].grid(column=1, row=2, sticky='ws')
-        self._widget['main.settings.version'].grid(column=0, row=0, sticky='nw')
+        self._widget['main.settings.version'].grid(column=0, columnspan=2, row=0, sticky='nw')
         self._widget['main.settings.language_label'].grid(column=0, row=1, sticky='nw')
         self._widget['main.settings.language'].grid(column=1, row=1, sticky='nw')
         self.resizable(False, False)
+
+    def install_version(self):
+        select = self._widget['main.install.version_list'].curselection()
+        if select == ():
+            log_warn('no version selected')
+            return
+        version = self._widget['main.install.version_list'].get(select[0])
+        for ver in self._versions:
+            if ver['version'] == version:
+                dialogue = InstallDialogue(ver['url']['gitee'], ver['bytes'])
+                dialogue.mainloop()
 
     def set_language(self):
         lang = tuple(api.get_lang_list())
         self._widget['main.settings.language']['values'] = lang
 
     def set_versions(self, events=None):
-        json = api.get_versions()
+        self._versions = api.get_versions()
         self._widget['main.install.version_list'].delete(0, 'end')
         versions = []
-        for item in json:
-            self._widget['main.install.version_list'].insert('end', item['version'])
+        for version in self._versions:
+            self._widget['main.install.version_list'].insert('end', version['version'])

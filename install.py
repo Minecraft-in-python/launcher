@@ -11,6 +11,8 @@ def install():
         mkdir(MCPYPATH)
     if not path.isdir(path.join(MCPYPATH, 'launcher')):
         mkdir(path.join(MCPYPATH, 'launcher'))
+    if not path.isdir(path.join(MCPYPATH, 'launcher', '.cache')):
+        mkdir(path.join(MCPYPATH, 'launcher', '.cache'))
     install_json('settings.json')
     if path.isdir(path.join(MCPYPATH, 'launcher', 'lang')):
         rmtree(path.join(MCPYPATH, 'launcher', 'lang'))
