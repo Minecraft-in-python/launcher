@@ -1,4 +1,17 @@
 {
 	"description": "中文(简体)",
-	"launcher.main.title"
+	"launcher.main.title": "Minecraft 启动器",
+	"launcher.main.start.title": "启动",
+	"launcher.main.start.start": "开始游戏",
+	"launcher.main.install.title": "安装",
+	"launcher.main.install.refresh": "刷新",
+	"launcher.main.install.install": "安装",
+	"launcher.main.install.uninstall": "删除",
+	"launcher.main.settings.title": "设置",
+	"launcher.main.settings.text": [
+		"启动器版本 %s",
+		"该程序在 GPLv3 协议下发行",
+		"Copyright (c) Minecraft-in-python 2020"
+	]
+
 }

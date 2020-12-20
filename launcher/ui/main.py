@@ -1,4 +1,5 @@
 import os
+from sys import platform
 from tkinter import *
 import tkinter.ttk as ttk
 
@@ -19,9 +20,10 @@ class MinecraftLauncher(Tk):
         self.title(get_lang('launcher.main.title'))
         self._widget = {}
         self._var = {}
-        theme = os.path.dirname(os.path.abspath(__file__)) + '/../theme/arc'
-        self.tk.eval('lappend auto_path {%s}' % theme)
-        ttk.Style().theme_use('arc')
+        if not platform.startswith('win'):
+            theme = os.path.dirname(os.path.abspath(__file__)) + '/../theme/arc'
+            self.tk.eval('lappend auto_path {%s}' % theme)
+            ttk.Style().theme_use('arc')
         self.create_var()
         self.create_widget()
         self.pack_widget()
@@ -41,12 +43,20 @@ class MinecraftLauncher(Tk):
         self._widget['main.start.select_version'].state(['readonly'])
         self._widget['main.start.start'] = ttk.Button(self._widget['main.start'], text=get_lang('launcher.main.start.start'))
         # notebook 之 install
+        self._widget['main.install.refresh'] = ttk.Button(self._widget['main.install'],
+                text=get_lang('launcher.main.install.refresh'), command=self.set_versions)
         self._widget['main.install.version_list'] = Listbox(self._widget['main.install'], height=10)
         self.set_versions()
         self._widget['main.install.scrollbar'] = ttk.Scrollbar(self._widget['main.install'],
                 command=self._widget['main.install.version_list'].yview)
         self._widget['main.install.version_list'].configure(yscrollcommand=self._widget['main.install.scrollbar'].set)
-        # self.resizable(False, False)
+        self._widget['main.install.install'] = ttk.Button(self._widget['main.install'],
+                text=get_lang('launcher.main.install.install'))
+        self._widget['main.install.uninstall'] = ttk.Button(self._widget['main.install'],
+                text=get_lang('launcher.main.install.uninstall'))
+        # notebook 之 settings
+        self._widget['main.settings.version'] = ttk.Label(self._widget['main.settings'],
+                text=get_lang('launcher.main.settings.text')[0] % VERSION['str'])
 
     def create_var(self):
         self._var['start.select_version'] = StringVar()
@@ -55,12 +65,17 @@ class MinecraftLauncher(Tk):
         self._widget['main'].grid(column=0, row=0, padx=5, pady=5, sticky='news')
         self._widget['main.start.select_version'].grid(column=0, row=0, pady=5, sticky='es')
         self._widget['main.start.start'].grid(column=0, row=1, sticky='es')
-        self._widget['main.install.version_list'].grid(column=0, columnspan=2, row=0, sticky='news')
-        self._widget['main.install.scrollbar'].grid(column=2, row=0, sticky='nes')
+        self._widget['main.install.refresh'].grid(column=0, row=0, sticky='nw')
+        self._widget['main.install.version_list'].grid(column=0, columnspan=2, row=1, sticky='news')
+        self._widget['main.install.scrollbar'].grid(column=2, row=1, sticky='nes')
+        self._widget['main.install.install'].grid(column=0, row=2, sticky='ws')
+        self._widget['main.install.uninstall'].grid(column=1, row=2, sticky='ws')
+        self._widget['main.settings.version'].grid(column=0, row=0, sticky='nw')
+        self.resizable(False, False)
 
-    def set_versions(self):
-        self._widget['main.install.version_list'].delete(0, 'end')
+    def set_versions(self, events=None):
         json = api.get_versions()
+        self._widget['main.install.version_list'].delete(0, 'end')
         versions = []
         for item in json:
             self._widget['main.install.version_list'].insert('end', item['version'])
