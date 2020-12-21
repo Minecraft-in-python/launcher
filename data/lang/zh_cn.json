@@ -7,6 +7,12 @@
 	"launcher.main.install.refresh": "刷新",
 	"launcher.main.install.install": "安装",
 	"launcher.main.install.uninstall": "删除",
+	"launcher.main.install.status": [
+		"无下载任务",
+		"正在下载 %d%%...",
+		"安装中",
+		"错误!"
+	],
 	"launcher.main.settings.title": "设置",
 	"launcher.main.settings.text": [
 		"启动器版本 %s",

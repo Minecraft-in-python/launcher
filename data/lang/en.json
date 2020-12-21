@@ -7,6 +7,12 @@
 	"launcher.main.install.refresh": "Refresh",
 	"launcher.main.install.install": "Install",
 	"launcher.main.install.uninstall": "Uninstall",
+	"launcher.main.install.status": [
+		"Nothing to do",
+		"Downloading %d%%...",
+		"Install...!",
+		"Error!"
+	],
 	"launcher.main.settings.title": "Settings",
 	"launcher.main.settings.text": [
 		"Launcher version %s",

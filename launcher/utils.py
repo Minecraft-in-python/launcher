@@ -1,4 +1,4 @@
-from os import environ, path
+import os
 from sys import platform
 import time
 
@@ -18,12 +18,12 @@ def log_warn(text):
 
 def search_mcpy():
     # 搜索文件存储位置
-    if 'MCPYPATH' in environ:
+    if 'MCPYPATH' in os.environ:
         MCPYPATH = environ['MCPYPATH']
     elif platform.startswith('win'):
-        MCPYPATH = path.join(path.expanduser('~'), 'mcpy')
+        MCPYPATH = os.path.join(os.path.expanduser('~'), 'mcpy')
     else:
-        MCPYPATH = path.join(path.expanduser('~'), '.mcpy')
+        MCPYPATH = os.path.join(os.path.expanduser('~'), '.mcpy')
     return MCPYPATH
 
 init()

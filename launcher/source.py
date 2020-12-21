@@ -4,7 +4,8 @@ from os.path import isdir, isfile, join
 from launcher.utils import *
 
 path = {}
-path['launcher'] = join(search_mcpy(), 'launcher')
+path['mcpypath'] = search_mcpy()
+path['launcher'] = join(path['mcpypath'], 'launcher')
 
 settings = load(open(join(path['launcher'], 'settings.json'), encoding='utf-8'))
 # 检查 settings.json 的正确性
