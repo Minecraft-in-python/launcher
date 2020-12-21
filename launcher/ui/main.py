@@ -92,7 +92,7 @@ class MinecraftLauncher(Tk):
         self._widget['main.install.uninstall'].grid(column=1, row=2, sticky='ws')
         self._widget['main.install.status'].grid(column=0, columnspan=2, row=3, padx=3, pady=3)
         self._widget['main.settings.version'].grid(column=0, columnspan=2, row=0, sticky='nw')
-        self._widget['main.settings.language_label'].grid(column=0, row=1, sticky='nw')
+        self._widget['main.settings.language_label'].grid(column=0, row=1, pady=3, sticky='nw')
         self._widget['main.settings.language'].grid(column=1, row=1, sticky='nw')
         self.resizable(False, False)
 
