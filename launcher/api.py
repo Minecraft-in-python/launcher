@@ -2,7 +2,7 @@ from json import load
 import os
 from requests import get
 
-from launcher.source import path
+from launcher.source import path, settings
 from launcher.utils import log_err
 
 def get_lang_list():
@@ -15,9 +15,9 @@ def get_lang_list():
         return lang_list
 
 def get_versions():
-    result = get('https://Minecraft-in-python.github.io/json/versions.json')
+    result = get(settings['version-list'])
     if result.status_code != 200:
         log_err('version list not available')
-        return []
+        exit(1)
     else:
         return result.json()

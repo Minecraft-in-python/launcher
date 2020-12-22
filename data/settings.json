@@ -1,3 +1,4 @@
 {
-	"lang": "en"
+	"lang": "en",
+	"version-list": "https://minecraft-in-python.github.io/json/versions.json"
 }

@@ -9,7 +9,7 @@ path['launcher'] = join(path['mcpypath'], 'launcher')
 
 settings = load(open(join(path['launcher'], 'settings.json'), encoding='utf-8'))
 # 检查 settings.json 的正确性
-for key in ['lang']:
+for key in ['lang', 'version-list']:
     if key not in settings:
         log_err("settings.json: missing '%s' key" % key)
         exit()

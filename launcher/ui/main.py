@@ -2,9 +2,11 @@ from hashlib import sha256
 from io import DEFAULT_BUFFER_SIZE
 import os
 import subprocess
+from shutil import move, rmtree
 from sys import executable, platform
 from threading import Thread
 from tkinter import *
+from tkinter import messagebox
 import tkinter.ttk as ttk
 from zipfile import ZipFile
 
@@ -31,6 +33,7 @@ class MinecraftLauncher(Tk):
             theme = os.path.dirname(os.path.abspath(__file__)) + '/../theme/arc'
             self.tk.eval('lappend auto_path {%s}' % theme)
             ttk.Style().theme_use('arc')
+        self._versions = api.get_versions()
         self.create_var()
         self.create_widget()
         self.pack_widget()
@@ -52,7 +55,7 @@ class MinecraftLauncher(Tk):
                 text=get_lang('launcher.main.start.start'), command=self.start_game)
         # notebook 之 install
         self._widget['main.install.refresh'] = ttk.Button(self._widget['main.install'],
-                text=get_lang('launcher.main.install.refresh'), command=self.set_versions)
+                text=get_lang('launcher.main.install.refresh'), command=self.refresh)
         self._widget['main.install.select_site'] = ttk.Combobox(self._widget['main.install'], width=10)
         self._widget['main.install.select_site'].set('github')
         self._widget['main.install.select_site'].state(['readonly'])
@@ -64,7 +67,7 @@ class MinecraftLauncher(Tk):
         self._widget['main.install.install'] = ttk.Button(self._widget['main.install'],
                 text=get_lang('launcher.main.install.install'), command=self.install_version)
         self._widget['main.install.uninstall'] = ttk.Button(self._widget['main.install'],
-                text=get_lang('launcher.main.install.uninstall'))
+                text=get_lang('launcher.main.install.uninstall'), command=self.uninstall_version)
         self._widget['main.install.status'] = ttk.Label(self._widget['main.install'],
                 text=get_lang('launcher.main.install.status')[0])
         # notebook 之 settings
@@ -73,7 +76,7 @@ class MinecraftLauncher(Tk):
         self._widget['main.settings.language_label'] = ttk.Label(self._widget['main.settings'],
                 text=get_lang('launcher.main.settings.language'))
         self._widget['main.settings.language'] = ttk.Combobox(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.language'), width=10)
+                text=get_lang('launcher.main.settings.language'), width=15)
         self._widget['main.settings.language'].state(['readonly'])
         self.set_language()
 
@@ -114,16 +117,18 @@ class MinecraftLauncher(Tk):
                 f.write(chunk)
         f.close()
         self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[2])
-        ZipFile(name).extractall(os.path.join(path['mcpypath'], 'game', version))
+        zf = ZipFile(name)
+        zf.extractall(os.path.join(path['mcpypath'], 'game', version))
         ret = subprocess.run([
             executable,
             os.path.join(path['mcpypath'], 'game', version, 'Minecraft', 'install.py'),
             '--no-install-requirements', '--no-register'
-        ], capture_output=True)
+        ], capture_output=False)
         if ret.returncode != 0:
             self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[3])
         else:
             self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[0])
+        self.set_versions()
 
     def install_version(self):
         select = self._widget['main.install.version_list'].curselection()
@@ -139,12 +144,28 @@ class MinecraftLauncher(Tk):
                 Thread(target=self.download, args=(version, ver['url'][site], ver['bytes'])).start()
                 break
 
+    def uninstall_version(self):
+        select = self._widget['main.install.version_list'].curselection()
+        if select == ():
+            log_warn('no version selected')
+            return
+        version = self._widget['main.install.version_list'].get(select[0])
+        if version[0] == '*':
+            if version[1:] in os.listdir(os.path.join(path['mcpypath'], 'game')):
+                if messagebox.askyesno(title=get_lang('launcher.main.install.uninstall.message')['title'],
+                        message=get_lang('launcher.main.install.uninstall.message')['message'] % version[1:]):
+                    rmtree(os.path.join(path['mcpypath'], 'game', version[1:]))
+                    self.set_versions()
+
     def set_language(self):
         lang = tuple(api.get_lang_list())
         self._widget['main.settings.language']['values'] = lang
 
-    def set_versions(self, events=None):
+    def refresh(self):
         self._versions = api.get_versions()
+        self.set_versions()
+
+    def set_versions(self):
         self._widget['main.install.version_list'].delete(0, 'end')
         self._widget['main.install.select_site'].configure(values=list(self._versions[0]['url'].keys()))
         self._widget['main.install.select_site'].set(list(self._versions[0]['url'].keys())[0])

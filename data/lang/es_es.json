@@ -1,0 +1,23 @@
+{
+    "description": "Español (España)",
+	"launcher.main.title": "Minecraft Lanzador",
+	"launcher.main.start.title": "Iniciar",
+	"launcher.main.start.start": "Iniciar Juego",
+	"launcher.main.install.title": "Instalar",
+	"launcher.main.install.refresh": "Actualizar",
+	"launcher.main.install.install": "Instalar",
+	"launcher.main.install.uninstall": "Desinstalar",
+	"launcher.main.install.status": [
+		"Nada que hacer",
+		"Descargando %d%%...",
+		"Instalar...!",
+		"Error!"
+	],
+	"launcher.main.settings.title": "Ajustes",
+	"launcher.main.settings.text": [
+		"Versión del lanzador %s",
+		"Este peograma se publica bajo la GPLv3",
+		"Copyright (c) Minecraft-in-python 2020"
+	],
+	"launcher.main.settings.language": "Idioma:"
+}

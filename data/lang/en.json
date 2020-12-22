@@ -7,6 +7,10 @@
 	"launcher.main.install.refresh": "Refresh",
 	"launcher.main.install.install": "Install",
 	"launcher.main.install.uninstall": "Uninstall",
+	"launcher.main.install.uninstall.message": {
+		"title": "Uninstall",
+		"message": "It will uninstall %s?"
+	},
 	"launcher.main.install.status": [
 		"Nothing to do",
 		"Downloading %d%%...",
