@@ -122,7 +122,7 @@ class MinecraftLauncher(Tk):
         ret = subprocess.run([
             executable,
             os.path.join(path['mcpypath'], 'game', version, 'Minecraft', 'install.py'),
-            '--no-install-requirements', '--no-register'
+            '--no-install-requirements', '--skip-register'
         ], capture_output=False)
         if ret.returncode != 0:
             self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[3])
