@@ -30,7 +30,7 @@ class MinecraftLauncher(Tk):
         self._widget = {}
         self._var = {}
         if not platform.startswith('win'):
-            theme = os.path.dirname(os.path.abspath(__file__)) + '/../theme/arc'
+            theme = os.path.dirname(os.path.abspath(__file__)) + '/theme/arc'
             self.tk.eval('lappend auto_path {%s}' % theme)
             ttk.Style().theme_use('arc')
         self._versions = api.get_versions()
@@ -79,6 +79,10 @@ class MinecraftLauncher(Tk):
                 text=get_lang('launcher.main.settings.language'), width=15)
         self._widget['main.settings.language'].state(['readonly'])
         self.set_language()
+        self._widget['main.settings.clean_cache'] = ttk.Button(self._widget['main.settings'],
+                text=get_lang('launcher.main.settings.clean_cache'), command=self.clean_cache)
+        self._widget['main.settings.credits'] = ttk.Label(self._widget['main.settings'],
+                text=get_lang('launcher.main.settings.text')[1])
 
     def create_var(self):
         self._var['start.select_version'] = StringVar()
@@ -97,26 +101,33 @@ class MinecraftLauncher(Tk):
         self._widget['main.settings.version'].grid(column=0, columnspan=2, row=0, sticky='nw')
         self._widget['main.settings.language_label'].grid(column=0, row=1, pady=3, sticky='nw')
         self._widget['main.settings.language'].grid(column=1, row=1, sticky='nw')
+        self._widget['main.settings.clean_cache'].grid(column=0, columnspan=2, row=2, sticky='nw')
+        self._widget['main.settings.credits'].grid(column=0, columnspan=2, row=3, sticky='nw')
         self.resizable(False, False)
+
+    def clean_cache(self):
+        rmtree(path['cache'])
+        os.mkdir(path['cache'])
 
     def download(self, version, url, total):
         sha = sha256()
         sha.update(url.encode())
-        name = os.path.join(path['launcher'], '.cache', sha.hexdigest()[:7] + '.zip')
-        result = get(url, stream=True)
-        if result.status_code != 200:
-            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[3])
-            return
-        size = 0
-        self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[1] % 0)
-        with open(name, 'wb') as f:
-            for chunk in result.iter_content(DEFAULT_BUFFER_SIZE):
-                size += int(len(chunk))
-                self._widget['main.install.status'].configure(
-                        text=get_lang('launcher.main.install.status')[1] % int(size / total * 100))
-                f.write(chunk)
-        f.close()
-        self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[2])
+        name = os.path.join(path['cache'], sha.hexdigest()[:7] + '.zip')
+        if not os.path.isfile(name):
+            result = get(url, stream=True)
+            if result.status_code != 200:
+                self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[3])
+                return
+            size = 0
+            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[1] % 0)
+            with open(name, 'wb') as f:
+                for chunk in result.iter_content(DEFAULT_BUFFER_SIZE):
+                    size += int(len(chunk))
+                    self._widget['main.install.status'].configure(
+                            text=get_lang('launcher.main.install.status')[1] % int(size / total * 100))
+                    f.write(chunk)
+            f.close()
+            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[2])
         zf = ZipFile(name)
         zf.extractall(os.path.join(path['mcpypath'], 'game', version))
         ret = subprocess.run([

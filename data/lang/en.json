@@ -20,8 +20,8 @@
 	"launcher.main.settings.title": "Settings",
 	"launcher.main.settings.text": [
 		"Launcher version %s",
-		"This peogram released under GPLv3",
-		"Copyright (c) Minecraft-in-python 2020"
+		"License is GPLv3\nCopyright (c) 2020"
 	],
-	"launcher.main.settings.language": "Language:"
+	"launcher.main.settings.language": "Language:",
+	"launcher.main.settings.clean_cache": "clean cache"
 }

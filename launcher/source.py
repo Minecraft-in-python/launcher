@@ -6,6 +6,7 @@ from launcher.utils import *
 path = {}
 path['mcpypath'] = search_mcpy()
 path['launcher'] = join(path['mcpypath'], 'launcher')
+path['cache'] = join(path['launcher'], '.cache')
 
 settings = load(open(join(path['launcher'], 'settings.json'), encoding='utf-8'))
 # 检查 settings.json 的正确性

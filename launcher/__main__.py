@@ -1,4 +1,4 @@
-from launcher.ui import main
+from launcher.ui import MinecraftLauncher
 
 if __name__ == '__main__':
-    main.MinecraftLauncher().mainloop()
+    MinecraftLauncher().mainloop()
