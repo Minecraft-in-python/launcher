@@ -3,6 +3,10 @@
 	"launcher.main.title": "Minecraft launcher",
 	"launcher.main.start.title": "Start",
 	"launcher.main.start.start": "Start game",
+	"launcher.main.start.manage": {
+		"register": "Register",
+		"rename": "Rename"
+	},
 	"launcher.main.install.title": "Install",
 	"launcher.main.install.refresh": "Refresh",
 	"launcher.main.install.install": "Install",

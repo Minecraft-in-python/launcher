@@ -1,6 +1,7 @@
 from hashlib import sha256
 from io import DEFAULT_BUFFER_SIZE
 import os
+import re
 import subprocess
 from shutil import move, rmtree
 from sys import executable, platform
@@ -34,9 +35,9 @@ class MinecraftLauncher(Tk):
             self.tk.eval('lappend auto_path {%s}' % theme)
             ttk.Style().theme_use('arc')
         self._versions = api.get_versions()
-        self.create_var()
         self.create_widget()
         self.pack_widget()
+        deps = api.has_deps(['pyglet', 'js2py', 'psutil', 'opensimplex'])
 
     def create_widget(self):
         # notebook 部件
@@ -48,11 +49,18 @@ class MinecraftLauncher(Tk):
         self._widget['main'].add(self._widget['main.install'], text=get_lang('launcher.main.install.title'))
         self._widget['main'].add(self._widget['main.settings'], text=get_lang('launcher.main.settings.title'))
         # notebook 之 start
-        self._widget['main.start.select_version'] = ttk.Combobox(self._widget['main.start'],
-                textvariable=self._var['start.select_version'], width=10)
+        self._widget['main.start.select_version'] = ttk.Combobox(self._widget['main.start'], width=10)
         self._widget['main.start.select_version'].state(['readonly'])
         self._widget['main.start.start'] = ttk.Button(self._widget['main.start'],
                 text=get_lang('launcher.main.start.start'), command=self.start_game)
+        self._widget['main.start.sep'] = ttk.Separator(self._widget['main.start'], orient='horizontal')
+        self._widget['main.start.name'] = ttk.Entry(self._widget['main.start'], width=12,
+                validate='key', validatecommand=(self.register(self.test_name), '%P'))
+        self._widget['main.start.manage'] = ttk.Button(self._widget['main.start'],
+                text=get_lang('launcher.main.start.manage')['register' if not api.has_register() else 'rename'],
+                command=self.manage_player)
+        self._widget['main.start.name'].delete(0, 'end')
+        self._widget['main.start.name'].insert(0, api.get_name())
         # notebook 之 install
         self._widget['main.install.refresh'] = ttk.Button(self._widget['main.install'],
                 text=get_lang('launcher.main.install.refresh'), command=self.refresh)
@@ -82,15 +90,15 @@ class MinecraftLauncher(Tk):
         self._widget['main.settings.clean_cache'] = ttk.Button(self._widget['main.settings'],
                 text=get_lang('launcher.main.settings.clean_cache'), command=self.clean_cache)
         self._widget['main.settings.credits'] = ttk.Label(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.text')[1])
-
-    def create_var(self):
-        self._var['start.select_version'] = StringVar()
+                text=get_lang('launcher.main.settings.text')[1], justify='right')
 
     def pack_widget(self):
         self._widget['main'].grid(column=0, row=0, padx=5, pady=5, sticky='news')
-        self._widget['main.start.select_version'].grid(column=0, row=0, pady=5, sticky='es')
-        self._widget['main.start.start'].grid(column=0, row=1, sticky='es')
+        self._widget['main.start.select_version'].grid(column=0, row=0, padx=3, pady=3, sticky='es')
+        self._widget['main.start.start'].grid(column=1, row=0, sticky='es')
+        self._widget['main.start.sep'].grid(column=0, columnspan=2, row=1, padx=5, pady=5, sticky='we')
+        self._widget['main.start.name'].grid(column=0, row=2, padx=3, pady=3, sticky='nw')
+        self._widget['main.start.manage'].grid(column=1, row=2, sticky='nw')
         self._widget['main.install.refresh'].grid(column=0, row=0, sticky='nw')
         self._widget['main.install.select_site'].grid(column=1, row=0, pady=2, sticky='ne')
         self._widget['main.install.version_list'].grid(column=0, columnspan=2, row=1, sticky='news')
@@ -102,7 +110,7 @@ class MinecraftLauncher(Tk):
         self._widget['main.settings.language_label'].grid(column=0, row=1, pady=3, sticky='nw')
         self._widget['main.settings.language'].grid(column=1, row=1, sticky='nw')
         self._widget['main.settings.clean_cache'].grid(column=0, columnspan=2, row=2, sticky='nw')
-        self._widget['main.settings.credits'].grid(column=0, columnspan=2, row=3, sticky='nw')
+        self._widget['main.settings.credits'].grid(column=0, columnspan=2, row=3, sticky='es')
         self.resizable(False, False)
 
     def clean_cache(self):
@@ -196,3 +204,18 @@ class MinecraftLauncher(Tk):
         if version in os.listdir(os.path.join(path['mcpypath'], 'game')):
             os.chdir(os.path.join(path['mcpypath'], 'game', version, 'Minecraft'))
             subprocess.run([executable, '-m', 'Minecraft'])
+
+    def test_name(self, s):
+        valid = re.match(r'^([a-z]|[A-Z]|_)\w+$', s) is not None
+        self._widget['main.start.manage'].state(['!disabled'] if valid else ['disabled'])
+        if len(s) <= 2:
+            return True
+        else:
+            return valid
+
+    def manage_player(self):
+        if api.has_register():
+            api.rename(self._widget['main.start.name'].get())
+        else:
+            api.register(self._widget['main.start.name'].get())
+            self._widget['main.start.manage'].configure(text=get_lang('launcher.main.start.manage')['rename'])

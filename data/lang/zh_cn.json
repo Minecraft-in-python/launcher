@@ -3,6 +3,10 @@
 	"launcher.main.title": "Minecraft 启动器",
 	"launcher.main.start.title": "启动",
 	"launcher.main.start.start": "开始游戏",
+	"launcher.main.start.manage": {
+		"register": "注册",
+		"rename": "重命名"
+	},
 	"launcher.main.install.title": "安装",
 	"launcher.main.install.refresh": "刷新",
 	"launcher.main.install.install": "安装",

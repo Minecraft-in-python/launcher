@@ -3,6 +3,10 @@
 	"launcher.main.title": "Minecraft Lanzador",
 	"launcher.main.start.title": "Iniciar",
 	"launcher.main.start.start": "Iniciar Juego",
+	"launcher.main.start.manage": {
+		"register": "Registro",
+		"rename": "Renombrar"
+	},
 	"launcher.main.install.title": "Instalar",
 	"launcher.main.install.refresh": "Actualizar",
 	"launcher.main.install.install": "Instalar",

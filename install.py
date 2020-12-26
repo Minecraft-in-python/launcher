@@ -1,14 +1,27 @@
 #!/usr/bin/env python3
 
 from json import dump, load
-from os import environ, mkdir, path
+from os import environ, mkdir, path, system
 from shutil import copytree, rmtree
-from sys import platform
+from sys import argv, executable, platform
 
 def install():
     MCPYPATH = search_mcpy()
     if not path.isdir(MCPYPATH):
         mkdir(MCPYPATH)
+    if '--no-install-requirements' not in argv:
+        print('[Install requirements]')
+        pip = executable + ' -m pip'
+        if '--hide-output' in argv:
+            code = system('%s install -U -r %s >> %s' % (pip, get_file('requirements.txt'), path.devnull))
+        else:
+            code = system('%s install -U -r %s' % (pip, get_file('requirements.txt')))
+        if code != 0:
+            print('pip raise error code: %d' % code)
+            exit(1)
+        else:
+            print('install successfully')
+    print('[Copy lib]')
     if not path.isdir(path.join(MCPYPATH, 'launcher')):
         mkdir(path.join(MCPYPATH, 'launcher'))
     if not path.isdir(path.join(MCPYPATH, 'launcher', '.cache')):
@@ -21,7 +34,8 @@ def install():
         rmtree(path.join(MCPYPATH, 'launcher', 'texture'))
     copytree(path.join(get_file('data'), 'texture'), path.join(MCPYPATH, 'launcher', 'texture'))
     if not path.isdir(path.join(MCPYPATH, 'game')):
-        mkdir(path.join(MCPYPATH, 'game'))
+        mkdir(path.join(MCPYPATH, 'game')) 
+    print('[Done]')
 
 def get_file(f):
     # 返回文件目录下的文件名
