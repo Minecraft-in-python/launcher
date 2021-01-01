@@ -24,7 +24,7 @@
 	"launcher.main.settings.title": "设置",
 	"launcher.main.settings.text": [
 		"启动器版本 %s",
-		"该程序在 GPLv3 协议下发行\nCopyright (c) 2020"
+		"该程序在 GPLv3 协议下发行\nCopyright (c) 2020-2021"
 	],
 	"launcher.main.settings.language": "语言: ",
 	"launcher.main.settings.clean_cache": "清除缓存"

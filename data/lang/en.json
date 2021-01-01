@@ -24,7 +24,7 @@
 	"launcher.main.settings.title": "Settings",
 	"launcher.main.settings.text": [
 		"Launcher version %s",
-		"License is GPLv3\nCopyright (c) 2020"
+		"License is GPLv3\nCopyright (c) 2020-2021"
 	],
 	"launcher.main.settings.language": "Language:",
 	"launcher.main.settings.clean_cache": "clean cache"
