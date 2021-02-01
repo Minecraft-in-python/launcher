@@ -32,7 +32,7 @@ def install():
     copytree(path.join(get_file('data'), 'lang'), path.join(MCPYPATH, 'launcher', 'lang'))
     if path.isdir(path.join(MCPYPATH, 'launcher', 'texture')):
         rmtree(path.join(MCPYPATH, 'launcher', 'texture'))
-    copytree(path.join(get_file('data'), 'texture'), path.join(MCPYPATH, 'launcher', 'texture'))
+    # copytree(path.join(get_file('data'), 'texture'), path.join(MCPYPATH, 'launcher', 'texture'))
     if not path.isdir(path.join(MCPYPATH, 'game')):
         mkdir(path.join(MCPYPATH, 'game')) 
     print('[Done]')
@@ -52,7 +52,7 @@ def install_json(f):
     for k, v in source.items():
         if k not in target:
             target[k] = v
-    dump(target, open(path.join(MCPYPATH, 'launcher', f), 'w+'), indent='\t')
+    dump(target, open(path.join(MCPYPATH, 'launcher', f), 'w+'))
 
 def search_mcpy():
     # 搜索文件存储位置
