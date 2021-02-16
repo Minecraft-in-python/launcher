@@ -12,7 +12,7 @@ import tkinter.ttk as ttk
 from zipfile import ZipFile
 
 from launcher import api
-from launcher.source import get_lang, path
+from launcher.source import get_text, path
 from launcher.utils import *
 
 from requests import get
@@ -27,7 +27,7 @@ class MinecraftLauncher(Tk):
             log_err('no display, exit')
             exit(1)
         log_info('Minecraft launcher %s' % VERSION['str'])
-        self.title(get_lang('launcher.main.title'))
+        self.title(get_text('launcher.main.title'))
         self._widget = {}
         self._var = {}
         if not platform.startswith('win'):
@@ -45,25 +45,25 @@ class MinecraftLauncher(Tk):
         self._widget['main.start'] = ttk.Frame(self._widget['main'])
         self._widget['main.install'] = ttk.Frame(self._widget['main'])
         self._widget['main.settings'] = ttk.Frame(self._widget['main'])
-        self._widget['main'].add(self._widget['main.start'], text=get_lang('launcher.main.start.title'))
-        self._widget['main'].add(self._widget['main.install'], text=get_lang('launcher.main.install.title'))
-        self._widget['main'].add(self._widget['main.settings'], text=get_lang('launcher.main.settings.title'))
+        self._widget['main'].add(self._widget['main.start'], text=get_text('launcher.main.start.title'))
+        self._widget['main'].add(self._widget['main.install'], text=get_text('launcher.main.install.title'))
+        self._widget['main'].add(self._widget['main.settings'], text=get_text('launcher.main.settings.title'))
         # notebook 之 start
         self._widget['main.start.select_version'] = ttk.Combobox(self._widget['main.start'], width=10)
         self._widget['main.start.select_version'].state(['readonly'])
         self._widget['main.start.start'] = ttk.Button(self._widget['main.start'],
-                text=get_lang('launcher.main.start.start'), command=self.start_game)
+                text=get_text('launcher.main.start.start'), command=self.start_game)
         self._widget['main.start.sep'] = ttk.Separator(self._widget['main.start'], orient='horizontal')
         self._widget['main.start.name'] = ttk.Entry(self._widget['main.start'], width=12,
                 validate='key', validatecommand=(self.register(self.test_name), '%P'))
         self._widget['main.start.manage'] = ttk.Button(self._widget['main.start'],
-                text=get_lang('launcher.main.start.manage')['register' if not api.has_register() else 'rename'],
+                text=get_text('launcher.main.start.manage')['register' if not api.has_register() else 'rename'],
                 command=self.manage_player)
         self._widget['main.start.name'].delete(0, 'end')
         self._widget['main.start.name'].insert(0, api.get_name())
         # notebook 之 install
         self._widget['main.install.refresh'] = ttk.Button(self._widget['main.install'],
-                text=get_lang('launcher.main.install.refresh'), command=self.refresh)
+                text=get_text('launcher.main.install.refresh'), command=self.refresh)
         self._widget['main.install.select_site'] = ttk.Combobox(self._widget['main.install'], width=10)
         self._widget['main.install.select_site'].set('github')
         self._widget['main.install.select_site'].state(['readonly'])
@@ -73,24 +73,24 @@ class MinecraftLauncher(Tk):
                 command=self._widget['main.install.version_list'].yview)
         self._widget['main.install.version_list'].configure(yscrollcommand=self._widget['main.install.scrollbar'].set)
         self._widget['main.install.install'] = ttk.Button(self._widget['main.install'],
-                text=get_lang('launcher.main.install.install'), command=self.install_version)
+                text=get_text('launcher.main.install.install'), command=self.install_version)
         self._widget['main.install.uninstall'] = ttk.Button(self._widget['main.install'],
-                text=get_lang('launcher.main.install.uninstall'), command=self.uninstall_version)
+                text=get_text('launcher.main.install.uninstall'), command=self.uninstall_version)
         self._widget['main.install.status'] = ttk.Label(self._widget['main.install'],
-                text=get_lang('launcher.main.install.status')[0])
+                text=get_text('launcher.main.install.status')[0])
         # notebook 之 settings
         self._widget['main.settings.version'] = ttk.Label(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.text')[0] % VERSION['str'])
+                text=get_text('launcher.main.settings.text')[0] % VERSION['str'])
         self._widget['main.settings.language_label'] = ttk.Label(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.language'))
+                text=get_text('launcher.main.settings.language'))
         self._widget['main.settings.language'] = ttk.Combobox(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.language'), width=15)
+                text=get_text('launcher.main.settings.language'), width=15)
         self._widget['main.settings.language'].state(['readonly'])
         self.set_language()
         self._widget['main.settings.clean_cache'] = ttk.Button(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.clean_cache'), command=self.clean_cache)
+                text=get_text('launcher.main.settings.clean_cache'), command=self.clean_cache)
         self._widget['main.settings.credits'] = ttk.Label(self._widget['main.settings'],
-                text=get_lang('launcher.main.settings.text')[1], justify='right')
+                text=get_text('launcher.main.settings.text')[1], justify='right')
 
     def pack_widget(self):
         self._widget['main'].grid(column=0, row=0, padx=5, pady=5, sticky='news')
@@ -117,25 +117,29 @@ class MinecraftLauncher(Tk):
         rmtree(path['cache'])
         os.mkdir(path['cache'])
 
-    def download(self, version, url, total):
-        sha = sha256()
-        sha.update(url.encode())
-        name = os.path.join(path['cache'], sha.hexdigest()[:7] + '.zip')
+    def download(self, version, url, hash_, total):
+        sha_name, sha_check = sha256(), sha256()
+        sha_name.update(url.encode())
+        name = os.path.join(path['cache'], sha_name.hexdigest()[:7] + '.zip')
         if not os.path.isfile(name):
             result = get(url, stream=True)
             if result.status_code != 200:
-                self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[3])
+                self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[3])
                 return
             size = 0
-            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[1] % 0)
+            self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[1] % 0)
             with open(name, 'wb') as f:
                 for chunk in result.iter_content(DEFAULT_BUFFER_SIZE):
                     size += int(len(chunk))
                     self._widget['main.install.status'].configure(
-                            text=get_lang('launcher.main.install.status')[1] % int(size / total * 100))
+                            text=get_text('launcher.main.install.status')[1] % int(size / total * 100))
                     f.write(chunk)
             f.close()
-            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[2])
+            sha_check.update(open(name, 'rb').read())
+            if sha_check.hexdigest() != hash_:
+                self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[3])
+                return
+            self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[2])
         zf = ZipFile(name)
         zf.extractall(os.path.join(path['mcpypath'], 'game', version))
         ret = subprocess.run([
@@ -144,9 +148,9 @@ class MinecraftLauncher(Tk):
             '--no-install-requirements', '--skip-register'
         ], capture_output=False)
         if ret.returncode != 0:
-            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[3])
+            self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[3])
         else:
-            self._widget['main.install.status'].configure(text=get_lang('launcher.main.install.status')[0])
+            self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[0])
         self.set_versions()
 
     def install_version(self):
@@ -160,7 +164,7 @@ class MinecraftLauncher(Tk):
             version = version[1:]
         for ver in self._versions:
             if ver['version'] == version:
-                Thread(target=self.download, args=(version, ver['url'][site], ver['bytes'])).start()
+                Thread(target=self.download, args=(version, ver['url'][site], ver['hash'], ver['bytes'])).start()
                 break
 
     def uninstall_version(self):
@@ -171,8 +175,8 @@ class MinecraftLauncher(Tk):
         version = self._widget['main.install.version_list'].get(select[0])
         if version[0] == '*':
             if version[1:] in os.listdir(os.path.join(path['mcpypath'], 'game')):
-                if messagebox.askyesno(title=get_lang('launcher.main.install.uninstall.message')['title'],
-                        message=get_lang('launcher.main.install.uninstall.message')['message'] % version[1:]):
+                if messagebox.askyesno(title=get_text('launcher.main.install.uninstall.message')['title'],
+                        message=get_text('launcher.main.install.uninstall.message')['message'] % version[1:]):
                     rmtree(os.path.join(path['mcpypath'], 'game', version[1:]))
                     self.set_versions()
 
@@ -218,4 +222,4 @@ class MinecraftLauncher(Tk):
             api.rename(self._widget['main.start.name'].get())
         else:
             api.register(self._widget['main.start.name'].get())
-            self._widget['main.start.manage'].configure(text=get_lang('launcher.main.start.manage')['rename'])
+            self._widget['main.start.manage'].configure(text=get_text('launcher.main.start.manage')['rename'])

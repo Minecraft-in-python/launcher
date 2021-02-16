@@ -20,4 +20,4 @@ if not isfile(join(path['launcher'], 'lang', settings['lang'] + '.json')):
     exit(1)
 
 lang = load(open(join(path['launcher'], 'lang', settings['lang'] + '.json'), encoding='utf-8'))
-get_lang = lambda s: lang[s] if s in lang else s
+get_text = lambda s: lang[s] if s in lang else s
