@@ -18,12 +18,16 @@ def get_lang_list():
         return lang_list
 
 def get_versions():
-    result = get(settings['version-list'])
-    if result.status_code != 200:
+    try:
+        result = get(settings['version-list'])
+        if result.status_code != 200:
+            log_err('version list not available')
+            exit(1)
+        else:
+            return result.json()
+    except:
         log_err('version list not available')
         exit(1)
-    else:
-        return result.json()
 
 def has_deps(deps):
     for d in sys.path:

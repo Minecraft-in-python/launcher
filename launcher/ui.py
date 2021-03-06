@@ -37,7 +37,7 @@ class MinecraftLauncher(Tk):
         self._versions = api.get_versions()
         self.create_widget()
         self.pack_widget()
-        deps = api.has_deps(['pyglet', 'js2py', 'psutil', 'opensimplex'])
+        deps = api.has_deps(['pyglet', 'psutil', 'opensimplex'])
 
     def create_widget(self):
         # notebook 部件
