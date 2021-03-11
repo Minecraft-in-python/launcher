@@ -1,12 +1,16 @@
-# 启动器
-启动器是用来下载, 安装, 运行各个版本游戏的软件, 安装:
+# Launcher - Minecraft Launcher
+The launcher is the software used to download, install, and run the various versions of the game, and to install:
 ```shell
-# Github 服务器
+# Github
 git clone https://github.com/Minecraft-in-python/launcher
-# Gitee 服务器
+
+# Gitee
 git clone https://gitee.com/Minecraft-in-python/launcher
+
 cd launcher
 ./install.py
 ```
 
-输入`python -m launcher`来运行启动器.
+Type `python -m launcher` to run the launcher.
+
+NOTE: Mincraft is installed together with a version of this launcher, it is not necessary to download them separately.
