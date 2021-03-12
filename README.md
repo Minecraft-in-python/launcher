@@ -13,4 +13,4 @@ cd launcher
 
 Type `python -m launcher` to run the launcher.
 
-NOTE: Mincraft is installed together with a version of this launcher, it is not necessary to download them separately.
+**NOTE:** Mincraft is installed together with a version of this launcher, it is not necessary to download them separately.
