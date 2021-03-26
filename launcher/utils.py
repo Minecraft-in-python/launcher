@@ -2,19 +2,35 @@ import os
 from sys import platform
 import time
 
-from colorama import Fore, Style, init
+_have_color = None
+try:
+    from colorama import Fore, Style, init
+    init()
+except ModuleNotFoundError:
+    _have_color = False
+else:
+    _have_color = True
 
 def log_err(text):
     # 打印错误信息
-    print('%s[ERR  %s]%s %s' % (Fore.RED, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+    if _have_color:
+        print('%s[ERR %s]%s %s' % (Fore.RED, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+    else:
+        print('[ERR %s] %s' % (time.strftime('%H:%M:%S'), text))
 
 def log_info(text):
     # 打印信息
-    print('%s[INFO %s]%s %s' % (Fore.GREEN, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+    if _have_color:
+        print('%s[INFO %s]%s %s' % (Fore.GREEN, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+    else:
+        print('[INFO %s] %s' % (time.strftime('%H:%M:%S'), text))
 
 def log_warn(text):
     # 打印警告信息
-    print('%s[WARN %s]%s %s' % (Fore.YELLOW, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+    if _have_color:
+        print('%s[WARN %s]%s %s' % (Fore.YELLOW, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+    else:
+        print('[WARN %s] %s' % (time.strftime('%H:%M:%S'), text))
 
 def search_mcpy():
     # 搜索文件存储位置
