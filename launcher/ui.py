@@ -162,9 +162,10 @@ class MinecraftLauncher(Tk):
         version = self._widget['main.install.version_list'].get(select[0])
         if version[0] == '*':
             version = version[1:]
-        for ver in self._versions:
+        for ver in self._versions['resource']:
             if ver['version'] == version:
-                Thread(target=self.download, args=(version, ver['url'][site], ver['hash'], ver['bytes'])).start()
+                site = self._versions['site'][site] % ver['url'][site]
+                Thread(target=self.download, args=(version, site, ver['hash'], ver['bytes'])).start()
                 break
 
     def uninstall_version(self):
@@ -190,11 +191,11 @@ class MinecraftLauncher(Tk):
 
     def set_versions(self):
         self._widget['main.install.version_list'].delete(0, 'end')
-        self._widget['main.install.select_site'].configure(values=list(self._versions[0]['url'].keys()))
-        self._widget['main.install.select_site'].set(list(self._versions[0]['url'].keys())[0])
+        self._widget['main.install.select_site'].configure(values=list(self._versions['site'].keys()))
+        self._widget['main.install.select_site'].set(list(self._versions['site'].keys())[0])
         versions = []
         installed = []
-        for version in self._versions:
+        for version in self._versions['resource']:
             if version['version'] in os.listdir(os.path.join(path['mcpypath'], 'game')):
                 self._widget['main.install.version_list'].insert('end', '*' + version['version'])
                 installed.append(version['version'])
