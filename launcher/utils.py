@@ -14,9 +14,9 @@ else:
 def log_err(text):
     # 打印错误信息
     if _have_color:
-        print('%s[ERR %s]%s %s' % (Fore.RED, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
+        print('%s[ERR  %s]%s %s' % (Fore.RED, time.strftime('%H:%M:%S'), Style.RESET_ALL, text))
     else:
-        print('[ERR %s] %s' % (time.strftime('%H:%M:%S'), text))
+        print('[ERR  %s] %s' % (time.strftime('%H:%M:%S'), text))
 
 def log_info(text):
     # 打印信息
@@ -36,6 +36,8 @@ def search_mcpy():
     # 搜索文件存储位置
     if 'MCPYPATH' in os.environ:
         MCPYPATH = environ['MCPYPATH']
+    elif platform == 'darwin':
+        MCPYPATH = path.join(path.expanduser('~'), 'Library', 'Application Support', 'mcpy')
     elif platform.startswith('win'):
         MCPYPATH = os.path.join(os.path.expanduser('~'), 'mcpy')
     else:
