@@ -33,7 +33,7 @@ def has_deps(deps):
     for d in sys.path:
         if os.path.isdir(d):
             for dep in deps:
-                if dep in os.listdir(d):
+                if (dep in os.listdir(d)) or (dep + '.py' in os.listdir(d)):
                     deps.remove(dep)
     else:
         return deps

@@ -7,6 +7,7 @@
 		"register": "注册",
 		"rename": "重命名"
 	},
+	"launcher.main.start.missing_deps": "依赖项未安装: %s",
 	"launcher.main.install.title": "安装",
 	"launcher.main.install.refresh": "刷新",
 	"launcher.main.install.install": "安装",

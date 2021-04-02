@@ -7,6 +7,7 @@
 		"register": "Registro",
 		"rename": "Renombrar"
 	},
+	"launcher.main.start.missing_deps": "Algunas dependencias no están instaladas: %s",
 	"launcher.main.install.title": "Instalar",
 	"launcher.main.install.refresh": "Actualizar",
 	"launcher.main.install.install": "Instalar",
