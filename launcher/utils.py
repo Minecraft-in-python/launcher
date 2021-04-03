@@ -35,7 +35,7 @@ def log_warn(text):
 def search_mcpy():
     # 搜索文件存储位置
     if 'MCPYPATH' in os.environ:
-        MCPYPATH = environ['MCPYPATH']
+        MCPYPATH = os.environ['MCPYPATH']
     elif platform == 'darwin':
         MCPYPATH = path.join(path.expanduser('~'), 'Library', 'Application Support', 'mcpy')
     elif platform.startswith('win'):

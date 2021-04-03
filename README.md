@@ -1,4 +1,4 @@
-# Launcher - Minecraft Launcher
+# Minecraft Launcher
 The launcher is the software used to download, install, and run the various versions of the game, and to install:
 ```shell
 # Github

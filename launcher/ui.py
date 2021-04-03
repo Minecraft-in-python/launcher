@@ -13,7 +13,7 @@ import tkinter.ttk as ttk
 from zipfile import ZipFile
 
 from launcher import api
-from launcher.source import get_text, path
+from launcher.source import get_text, path, settings
 from launcher.utils import *
 
 from requests import get
@@ -209,16 +209,17 @@ class MinecraftLauncher(Tk):
         version = self._widget['main.start.select_version'].get()
         if version in os.listdir(os.path.join(path['mcpypath'], 'game')):
             os.chdir(os.path.join(path['mcpypath'], 'game', version, 'Minecraft'))
-            deps = []
-            for line in open('requirements.txt', 'r+').readlines():
-                if line.rindex('=') == -1:
-                    deps.append(line.strip())
+            if settings['check-deps']:
+                deps = []
+                for line in open('requirements.txt', 'r+').readlines():
+                    if line.rindex('=') == -1:
+                        deps.append(line.strip())
+                    else:
+                        deps.append(line[:line.rindex('=') - 1])
                 else:
-                    deps.append(line[:line.rindex('=') - 1])
-            else:
-                deps = api.has_deps(deps)
-                if deps:
-                    messagebox.showinfo(message=get_text('launcher.main.start.missing_deps') % ', '.join(deps))
+                    deps = api.has_deps(deps)
+                    if deps:
+                        messagebox.showinfo(message=get_text('launcher.main.start.missing_deps') % ', '.join(deps))
             self.iconify()
             subprocess.run([executable, '-m', 'Minecraft'])
             self.deiconify()
