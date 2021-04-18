@@ -137,7 +137,8 @@ class MinecraftLauncher(Tk):
                     f.write(chunk)
             f.close()
             sha_check.update(open(name, 'rb').read())
-            if sha_check.hexdigest() != hash_:
+            if sha_check.hexdigest()[:7] != hash_:
+                log_info('Hash not same')
                 self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[3])
                 return
             self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[2])
@@ -149,6 +150,7 @@ class MinecraftLauncher(Tk):
             '--no-install-requirements', '--skip-register'
         ], capture_output=False)
         if ret.returncode != 0:
+            log_info('Install error')
             self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[3])
         else:
             self._widget['main.install.status'].configure(text=get_text('launcher.main.install.status')[0])
