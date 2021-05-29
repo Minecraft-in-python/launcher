@@ -5,7 +5,7 @@ from requests import get
 import sys
 import uuid
 
-from launcher.source import path, settings
+from launcher.source import set_lang, settings, path
 from launcher.utils import *
 
 def get_lang_list():
@@ -63,9 +63,18 @@ def register(name):
     player = {}
     player['id'] = str(uuid.uuid4())
     player['name'] = name
-    dump(player, open(os.path.join(path['mcpypath'], 'player.json'), 'w+'), indent='\t')
+    dump(player, open(os.path.join(path['mcpypath'], 'player.json'), 'w+'))
 
 def rename(name):
     player = load(open(os.path.join(path['mcpypath'], 'player.json')))
     player['name'] = name
-    dump(player, open(os.path.join(path['mcpypath'], 'player.json'), 'w+'), indent='\t')
+    dump(player, open(os.path.join(path['mcpypath'], 'player.json'), 'w+'))
+
+def reset_lang(name):
+    global lang
+    for lang_file in os.listdir(os.path.join(path['launcher'], 'lang')):
+        d = load(open(os.path.join(path['launcher'], 'lang', lang_file), 'r+'))
+        if d['description'] == name:
+            settings['lang'] = lang_file[:-5]
+            dump(settings, open(os.path.join(path['launcher'], 'settings.json'), 'w+'))
+            set_lang()

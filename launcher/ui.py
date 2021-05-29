@@ -27,7 +27,6 @@ class MinecraftLauncher(Tk):
         except:
             log_err('no display, exit')
             exit(1)
-        log_info('Minecraft launcher %s' % VERSION['str'])
         self.title(get_text('launcher.main.title'))
         self._widget = {}
         self._var = {}
@@ -84,8 +83,11 @@ class MinecraftLauncher(Tk):
                 text=get_text('launcher.main.settings.text')[0] % VERSION['str'])
         self._widget['main.settings.language_label'] = ttk.Label(self._widget['main.settings'],
                 text=get_text('launcher.main.settings.language'))
+        self.select_language = StringVar()
         self._widget['main.settings.language'] = ttk.Combobox(self._widget['main.settings'],
-                text=get_text('launcher.main.settings.language'), width=15)
+                textvariable=self.select_language, width=15)
+        self._widget['main.settings.language'].bind('<<ComboboxSelected>>', self.change_language)
+        self.select_language.set(get_text('description'))
         self._widget['main.settings.language'].state(['readonly'])
         self.set_language()
         self._widget['main.settings.clean_cache'] = ttk.Button(self._widget['main.settings'],
@@ -113,6 +115,24 @@ class MinecraftLauncher(Tk):
         self._widget['main.settings.clean_cache'].grid(column=0, columnspan=2, row=2, sticky='nw')
         self._widget['main.settings.credits'].grid(column=0, columnspan=2, row=3, sticky='es')
         self.resizable(False, False)
+
+    def change_language(self, event=None):
+        log_info("Set language: '%s'" % self.select_language.get())
+        api.reset_lang(self.select_language.get())
+        self.title(get_text('launcher.main.title'))
+        self._widget['main'].tab(0, text=get_text('launcher.main.start.title'))
+        self._widget['main'].tab(1, text=get_text('launcher.main.install.title'))
+        self._widget['main'].tab(2, text=get_text('launcher.main.settings.title'))
+        self._widget['main.start.start']['text'] = get_text('launcher.main.start.start')
+        self._widget['main.start.manage']['text'] = get_text('launcher.main.start.manage')['register' if not api.has_register() else 'rename']
+        self._widget['main.install.refresh']['text'] = get_text('launcher.main.install.refresh')
+        self._widget['main.install.install']['text'] = get_text('launcher.main.install.install')
+        self._widget['main.install.uninstall']['text'] = get_text('launcher.main.install.uninstall')
+        self._widget['main.install.status']['text'] = get_text('launcher.main.install.status')[0]
+        self._widget['main.settings.version']['text'] = get_text('launcher.main.settings.text')[0] % VERSION['str']
+        self._widget['main.settings.language_label']['text'] = get_text('launcher.main.settings.language')
+        self._widget['main.settings.clean_cache']['text'] = get_text('launcher.main.settings.clean_cache')
+        self._widget['main.settings.credits']['text'] = get_text('launcher.main.settings.text')[1]
 
     def clean_cache(self):
         rmtree(path['cache'])
@@ -223,7 +243,7 @@ class MinecraftLauncher(Tk):
                     if deps:
                         messagebox.showinfo(message=get_text('launcher.main.start.missing_deps') % ', '.join(deps))
             self.iconify()
-            subprocess.run([executable, '-m', 'Minecraft'])
+            subprocess.run([executable, '-m', 'minecraft'])
             self.deiconify()
 
     def test_name(self, s):

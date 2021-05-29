@@ -7,6 +7,7 @@ path = {}
 path['mcpypath'] = search_mcpy()
 path['launcher'] = join(path['mcpypath'], 'launcher')
 path['cache'] = join(path['launcher'], '.cache')
+lang = dict()
 
 settings = load(open(join(path['launcher'], 'settings.json'), encoding='utf-8'))
 # 检查 settings.json 的正确性
@@ -19,5 +20,10 @@ if not isfile(join(path['launcher'], 'lang', settings['lang'] + '.json')):
     log_err("settings.json: language '%s' not found" % settings['lang'])
     exit(1)
 
-lang = load(open(join(path['launcher'], 'lang', settings['lang'] + '.json'), encoding='utf-8'))
 get_text = lambda s: lang[s] if s in lang else s
+
+def set_lang():
+    global lang
+    lang = load(open(join(path['launcher'], 'lang', settings['lang'] + '.json'), encoding='utf-8'))
+
+set_lang()
