@@ -167,7 +167,7 @@ class MinecraftLauncher(Tk):
         ret = subprocess.run([
             executable,
             os.path.join(path['mcpypath'], 'game', version, 'Minecraft', 'install.py'),
-            '--no-install-requirements', '--skip-register'
+            '--no-install-requirements', '--skip-gen-script', '--skip-register'
         ], capture_output=False)
         if ret.returncode != 0:
             log_info('Install error')
