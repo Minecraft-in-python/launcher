@@ -1,0 +1,32 @@
+{
+	"description": "繁體中文(台灣)",
+	"launcher.main.title": "Minecraft 啟動器",
+	"launcher.main.start.title": "啟動",
+	"launcher.main.start.start": "開始遊戲",
+	"launcher.main.start.manage": {
+		"register": "註冊",
+		"rename": "重命名"
+	},
+	"launcher.main.start.missing_deps": "依賴項未安裝: %s",
+	"launcher.main.install.title": "安裝",
+	"launcher.main.install.refresh": "刷新",
+	"launcher.main.install.install": "安裝",
+	"launcher.main.install.uninstall": "刪除",
+	"launcher.main.install.uninstall.message": {
+		"title": "刪除",
+		"message": "確認刪除 %s?"
+	},
+	"launcher.main.install.status": [
+		"無下載任務",
+		"正在下載 %d%%...",
+		"安裝中",
+		"錯誤!"
+	],
+	"launcher.main.settings.title": "設置",
+	"launcher.main.settings.text": [
+		"啟動器版本 %s",
+		"該程序在 GPLv3 協議下發行\nCopyright (c) 2020-2021"
+	],
+	"launcher.main.settings.language": "語言",
+	"launcher.main.settings.clean_cache": "清除緩存"
+}

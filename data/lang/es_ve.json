@@ -1,5 +1,5 @@
 {
-    "description": "Español (España)",
+	"description": "Español(Venezuela)",
 	"launcher.main.title": "Minecraft Lanzador",
 	"launcher.main.start.title": "Iniciar",
 	"launcher.main.start.start": "Iniciar Juego",
@@ -12,6 +12,10 @@
 	"launcher.main.install.refresh": "Actualizar",
 	"launcher.main.install.install": "Instalar",
 	"launcher.main.install.uninstall": "Desinstalar",
+	"launcher.main.install.uninstall.message": {
+		"titulo": "Desinstalar",
+		"mensaje": "It will uninstall %s?"
+	},
 	"launcher.main.install.status": [
 		"Nada que hacer",
 		"Descargando %d%%...",
@@ -23,6 +27,6 @@
 		"Versión del lanzador %s",
 		"La licencia es GPLv3\nCopyright (c) 2020-2021"
 	],
-	"launcher.main.settings.language": "Idioma:",
+	"launcher.main.settings.language": "Idioma",
 	"launcher.main.settings.clean_cache": "Borrar caché"
 }

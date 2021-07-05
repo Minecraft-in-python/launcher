@@ -1,5 +1,5 @@
 {
-	"description": "English",
+	"description": "English(US)",
 	"launcher.main.title": "Minecraft launcher",
 	"launcher.main.start.title": "Start",
 	"launcher.main.start.start": "Start game",
@@ -27,6 +27,6 @@
 		"Launcher version %s",
 		"License is GPLv3\nCopyright (c) 2020-2021"
 	],
-	"launcher.main.settings.language": "Language:",
+	"launcher.main.settings.language": "Language",
 	"launcher.main.settings.clean_cache": "clean cache"
 }
