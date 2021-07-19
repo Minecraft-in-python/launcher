@@ -1,5 +1,5 @@
 {
-	"description": "Español(Venezuela)",
+	"description": "Español(España)",
 	"launcher.main.title": "Minecraft Lanzador",
 	"launcher.main.start.title": "Iniciar",
 	"launcher.main.start.start": "Iniciar Juego",
@@ -25,7 +25,7 @@
 	"launcher.main.settings.title": "Ajustes",
 	"launcher.main.settings.text": [
 		"Versión del lanzador %s",
-		"La licencia es GPLv3\nCopyright (c) 2020-2021"
+		"Licencia GPLv3\nCopyright (c) 2020-2021"
 	],
 	"launcher.main.settings.language": "Idioma",
 	"launcher.main.settings.clean_cache": "Borrar caché"

@@ -9,7 +9,7 @@ def install():
     MCPYPATH = search_mcpy()
     if not path.isdir(MCPYPATH):
         mkdir(MCPYPATH)
-    if '--no-install-requirements' not in argv:
+    if '--skip-install-requirements' not in argv:
         print('[Install requirements]')
         pip = executable + ' -m pip'
         if '--hide-output' in argv:
@@ -26,13 +26,7 @@ def install():
         mkdir(path.join(MCPYPATH, 'launcher'))
     if not path.isdir(path.join(MCPYPATH, 'launcher', '.cache')):
         mkdir(path.join(MCPYPATH, 'launcher', '.cache'))
-    install_json('settings.json')
-    if path.isdir(path.join(MCPYPATH, 'launcher', 'lang')):
-        rmtree(path.join(MCPYPATH, 'launcher', 'lang'))
-    copytree(path.join(get_file('data'), 'lang'), path.join(MCPYPATH, 'launcher', 'lang'))
-    if path.isdir(path.join(MCPYPATH, 'launcher', 'texture')):
-        rmtree(path.join(MCPYPATH, 'launcher', 'texture'))
-    # copytree(path.join(get_file('data'), 'texture'), path.join(MCPYPATH, 'launcher', 'texture'))
+    install_settings()
     if not path.isdir(path.join(MCPYPATH, 'game')):
         mkdir(path.join(MCPYPATH, 'game')) 
     print('[Done]')
@@ -41,18 +35,20 @@ def get_file(f):
     # 返回文件目录下的文件名
     return path.abspath(path.join(path.dirname(__file__), f))
 
-def install_json(f):
+def install_settings():
     MCPYPATH = search_mcpy()
-    source = load(open(path.join(get_file('data'), f)))
+    source = {
+            'check-deps': True,
+            'lang': 'en_us',
+            'version-list': 'https://minecraft-in-python.github.io/source/json/versions.json'
+        }
     target = {}
-    if path.isfile(path.join(MCPYPATH, 'launcher', f)):
-        target = load(open(path.join(MCPYPATH, 'launcher', f)))
-    else:
-        target = {}
+    if path.isfile(path.join(MCPYPATH, 'launcher', 'settings.json')):
+        target = load(open(path.join(MCPYPATH, 'launcher', 'settings.json')))
     for k, v in source.items():
-        if k not in target:
+        if (k not in target) or (not isinstance(k, type(v))):
             target[k] = v
-    dump(target, open(path.join(MCPYPATH, 'launcher', f), 'w+'))
+    dump(target, open(path.join(MCPYPATH, 'launcher', 'settings.json'), 'w+'))
 
 def search_mcpy():
     # 搜索文件存储位置

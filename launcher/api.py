@@ -9,7 +9,7 @@ from launcher.source import set_lang, settings, path
 from launcher.utils import *
 
 def get_lang_list():
-    lang_dir = os.path.join(path['launcher'], 'lang')
+    lang_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'assets', 'lang'))
     lang_list = []
     for f in os.listdir(lang_dir):
         with open(os.path.join(lang_dir, f)) as s:
@@ -45,7 +45,8 @@ def has_register():
             if key not in player:
                 return False
         else:
-            if not re.match(r'^([a-z]|[A-Z]|_)\w+$', player['name']):
+            is_valid_char = lambda c: any([c.isalpha(), c.isdigit(), c == '_'])
+            if all([c for c in map(is_valid_char, player['name'])]) and (len(player['name']) < 3):
                 return False
             if not re.match('^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$', player['id']):
                 return False
@@ -72,8 +73,9 @@ def rename(name):
 
 def reset_lang(name):
     global lang
-    for lang_file in os.listdir(os.path.join(path['launcher'], 'lang')):
-        d = load(open(os.path.join(path['launcher'], 'lang', lang_file), 'r+'))
+    lang_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'assets', 'lang'))
+    for lang_file in os.listdir(lang_dir):
+        d = load(open(os.path.join(lang_dir, lang_file), 'r+'))
         if d['description'] == name:
             settings['lang'] = lang_file[:-5]
             dump(settings, open(os.path.join(path['launcher'], 'settings.json'), 'w+'))
